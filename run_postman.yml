@@ -1,4 +1,4 @@
-name: Run Postman Collection with HTML Report
+name: Run Postman Collection with Verbose HTML Report
 
 on:
   push:
@@ -21,25 +21,56 @@ jobs:
         with:
           node-version: "20"
 
-      # 3️⃣ Install Newman + HTML reporter
-      - name: Install Newman and HTML reporter
-        run: npm install -g newman newman-reporter-html
+      # 3️⃣ Show Node.js/NPM versions
+      - name: Show Node.js/NPM versions
+        run: |
+          node -v
+          npm -v
 
-      # 4️⃣ Run Newman Collection with HTML report
+      # 4️⃣ Install Newman + HTML reporter
+      - name: Install Newman and HTML reporter
+        run: |
+          npm install -g newman newman-reporter-html
+          echo "Newman installed at:"
+          which newman
+          newman -v
+
+      # 5️⃣ Show current directory and files before running Newman
+      - name: List current directory before Newman
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Files:"
+          ls -la
+
+      # 6️⃣ Run Newman Collection with HTML report
       - name: Run Newman Collection
         run: |
           mkdir -p newman-report
+          echo "Running Newman..."
           newman run WorkingTestAPICollection.json \
             --reporters cli,html \
             --reporter-html-export newman-report/report.html
+          echo "Listing newman-report folder after Newman run:"
+          ls -la newman-report
+          if [ -f newman-report/report.html ]; then
+            echo "✅ report.html exists"
+          else
+            echo "❌ report.html NOT found!"
+            exit 1
+          fi
 
-      # 5️⃣ Verify that report exists
-      - name: List newman-report directory
-        run: ls -la newman-report
-
-      # 6️⃣ Upload HTML report as artifact
+      # 7️⃣ Upload HTML report as artifact
       - name: Upload Newman HTML report
         uses: actions/upload-artifact@v3
         with:
           name: newman-html-report
           path: newman-report/report.html
+
+      # 8️⃣ Final check of working directory
+      - name: List all directories at the end
+        run: |
+          echo "Final directory listing:"
+          pwd
+          ls -la
+          ls -la newman-report || echo "newman-report folder missing"
