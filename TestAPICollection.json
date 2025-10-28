@@ -1,33 +1,27 @@
 {
 	"info": {
-		"name": "Test API Collection",
-		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-		"description": "Коллекция из двух запросов к открытой тестовой API ReqRes.",
+		"name": "Working Test API Collection",
+		"_postman_id": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
+		"description": "GET и POST запросы к JSONPlaceholder. Работает в Newman без авторизации.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "GET Users List",
+			"name": "GET Posts List",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://reqres.in/api/users?page=2",
+					"raw": "https://jsonplaceholder.typicode.com/posts",
 					"protocol": "https",
-					"host": ["reqres", "in"],
-					"path": ["api", "users"],
-					"query": [
-						{
-							"key": "page",
-							"value": "2"
-						}
-					]
+					"host": ["jsonplaceholder", "typicode", "com"],
+					"path": ["posts"]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "POST Create User",
+			"name": "POST Create Post",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -38,13 +32,13 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Alisher\",\n    \"job\": \"QA Engineer\"\n}"
+					"raw": "{\n  \"title\": \"foo\",\n  \"body\": \"bar\",\n  \"userId\": 1\n}"
 				},
 				"url": {
-					"raw": "https://reqres.in/api/users",
+					"raw": "https://jsonplaceholder.typicode.com/posts",
 					"protocol": "https",
-					"host": ["reqres", "in"],
-					"path": ["api", "users"]
+					"host": ["jsonplaceholder", "typicode", "com"],
+					"path": ["posts"]
 				}
 			},
 			"response": []
