@@ -23,20 +23,31 @@ jobs:
 
       # 3. Устанавливаем Newman
       - name: Install Newman
-        run: |
-          npm install -g newman
+        run: npm install -g newman
 
-      # 4. Запуск коллекции с JSON-отчетом
+      # 4. Создаём папку для отчётов
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      # 5. Запускаем коллекцию с CLI, JSON и HTML отчётами
       - name: Run Postman Collection
         run: |
-          echo "📂 Running Postman collection with JSON reporter..."
+          echo "🚀 Running Postman collection..."
           newman run TestAPICollection.json \
-            -r json \
-            --reporter-json-export newman-report.json
+            -r cli,json,html \
+            --reporter-json-export reports/newman-report.json \
+            --reporter-html-export reports/newman-report.html
 
-      # 5. Загружаем JSON-отчет как артефакт
-      - name: Upload JSON Report
+      # 6. Проверяем наличие отчётов
+      - name: Check report files
+        run: |
+          ls -la reports
+          test -f reports/newman-report.json || (echo "❌ JSON report not found!" && exit 1)
+          test -f reports/newman-report.html || (echo "❌ HTML report not found!" && exit 1)
+
+      # 7. Загружаем отчёты как артефакт
+      - name: Upload Newman Reports
         uses: actions/upload-artifact@v4
         with:
-          name: newman-json-report
-          path: newman-report.json
+          name: newman-reports
+          path: reports/
