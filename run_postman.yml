@@ -24,18 +24,22 @@ jobs:
 
       - name: Run Postman Collection with HTML report
         run: |
-          mkdir -p newman-report
-          echo "Running Newman collection..."
-          newman run WorkingTestAPICollection.json \
+          # Создаём папку для отчета
+          mkdir -p $GITHUB_WORKSPACE/newman-report
+
+          # Запуск коллекции Newman с HTML отчетом
+          newman run $GITHUB_WORKSPACE/WorkingTestAPICollection.json \
             --reporters cli,html \
-            --reporter-html-export newman-report/report.html \
+            --reporter-html-export $GITHUB_WORKSPACE/newman-report/report.html \
             --disable-unicode
-          echo "Listing generated files:"
-          ls -la newman-report
+
+          # Проверяем, что файл создан
+          echo "Listing files in newman-report:"
+          ls -la $GITHUB_WORKSPACE/newman-report
 
       - name: Verify HTML report exists
         run: |
-          if [ ! -f newman-report/report.html ]; then
+          if [ ! -f $GITHUB_WORKSPACE/newman-report/report.html ]; then
             echo "ERROR: Newman HTML report not found!"
             exit 1
           else
@@ -46,4 +50,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: newman-html-report
-          path: newman-report/report.html
+          path: $GITHUB_WORKSPACE/newman-report/report.html
