@@ -46,7 +46,24 @@ jobs:
           test -f reports/newman-report.json || (echo "❌ JSON report missing" && exit 1)
           test -f reports/newman-report.html || (echo "❌ HTML report missing" && exit 1)
 
-      # 7. Загружаем отчёты как артефакт
+      # 7. Извлекаем статистику из JSON-отчёта
+      - name: Extract test summary from JSON report
+        run: |
+          echo "📊 Newman test summary:"
+          passed=$(jq '.run.stats.assertions.total - .run.stats.assertions.failed' reports/newman-report.json)
+          failed=$(jq '.run.stats.assertions.failed' reports/newman-report.json)
+          total=$(jq '.run.stats.assertions.total' reports/newman-report.json)
+
+          echo "✅ Passed: $passed"
+          echo "❌ Failed: $failed"
+          echo "📋 Total:  $total"
+
+          if [ "$failed" -gt 0 ]; then
+            echo "❗ Some tests failed"
+            exit 1
+          fi
+
+      # 8. Загружаем отчёты как артефакт
       - name: Upload Newman Reports
         uses: actions/upload-artifact@v4
         with:
