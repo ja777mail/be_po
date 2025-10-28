@@ -1,7 +1,7 @@
 name: Run Postman Collection
 
 on:
-  workflow_dispatch: # позволяет запускать вручную
+  workflow_dispatch: # ручной запуск
   push:
     branches:
       - main
@@ -11,32 +11,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Клонирование репозитория
+      # 1. Клонируем репозиторий
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Установка Node.js
+      # 2. Устанавливаем Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
-      # 3. Установка Newman и HTML-репортера
-      - name: Install Newman and Reporter
+      # 3. Устанавливаем Newman
+      - name: Install Newman
         run: |
-          npm install -g newman newman-reporter-htmlextra
+          npm install -g newman
 
-      # 4. Запуск коллекции с HTML отчетом
+      # 4. Запуск коллекции с JSON-отчетом
       - name: Run Postman Collection
         run: |
-          echo "📂 Running Postman collection and generating report..."
+          echo "📂 Running Postman collection with JSON reporter..."
           newman run TestAPICollection.json \
-            -r htmlextra \
-            --reporter-htmlextra-export report.html
+            -r json \
+            --reporter-json-export newman-report.json
 
-      # 5. Загрузка отчета как артефакт
-      - name: Upload Test Report
+      # 5. Загружаем JSON-отчет как артефакт
+      - name: Upload JSON Report
         uses: actions/upload-artifact@v4
         with:
-          name: newman-test-report
-          path: report.html
+          name: newman-json-report
+          path: newman-report.json
