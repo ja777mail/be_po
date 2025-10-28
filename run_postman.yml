@@ -1,4 +1,4 @@
-name: Run Postman Collection with Verbose HTML Report
+name: Newman API Tests
 
 on:
   push:
@@ -11,66 +11,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout repository
+      # 1️⃣ Получаем код репозитория
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Setup Node.js
+      # 2️⃣ Устанавливаем Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: 20
 
-      # 3️⃣ Show Node.js/NPM versions
-      - name: Show Node.js/NPM versions
+      # 3️⃣ Устанавливаем Newman глобально и проверяем версию
+      - name: Install Newman globally
         run: |
-          node -v
-          npm -v
-
-      # 4️⃣ Install Newman + HTML reporter
-      - name: Install Newman and HTML reporter
-        run: |
-          npm install -g newman newman-reporter-html
-          echo "Newman installed at:"
-          which newman
+          echo "🚀 Installing Newman..."
+          npm install -g newman
+          echo "📌 Newman version:"
           newman -v
 
-      # 5️⃣ Show current directory and files before running Newman
-      - name: List current directory before Newman
+      # 4️⃣ Запуск коллекции с CLI + HTML репортом
+      #    и пошаговым выводом каждого запроса/ответа
+      - name: Run Newman Collection with HTML report and detailed logs
         run: |
-          echo "Current directory:"
-          pwd
-          echo "Files:"
-          ls -la
-
-      # 6️⃣ Run Newman Collection with HTML report
-      - name: Run Newman Collection
-        run: |
+          echo "📂 Creating report directory..."
           mkdir -p newman-report
-          echo "Running Newman..."
-          newman run WorkingTestAPICollection.json \
-            --reporters cli,html \
-            --reporter-html-export newman-report/report.html
-          echo "Listing newman-report folder after Newman run:"
-          ls -la newman-report
-          if [ -f newman-report/report.html ]; then
-            echo "✅ report.html exists"
-          else
-            echo "❌ report.html NOT found!"
-            exit 1
-          fi
 
-      # 7️⃣ Upload HTML report as artifact
+          echo "🏃 Running Newman collection with detailed logs..."
+          newman run TestAPICollection.json \
+            --reporters cli,html \
+            --reporter-cli-no-summary false \
+            --reporter-html-export newman-report/report.html \
+            --verbose \
+            --bail \
+            --color on
+
+          echo "📋 Listing report files:"
+          ls -la newman-report
+
+      # 5️⃣ Загружаем HTML репорт как артефакт workflow
       - name: Upload Newman HTML report
         uses: actions/upload-artifact@v3
         with:
           name: newman-html-report
           path: newman-report/report.html
-
-      # 8️⃣ Final check of working directory
-      - name: List all directories at the end
-        run: |
-          echo "Final directory listing:"
-          pwd
-          ls -la
-          ls -la newman-report || echo "newman-report folder missing"
