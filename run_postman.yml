@@ -19,12 +19,11 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install Newman globally
-        run: npm install -g newman
+      - name: Install Newman with HTML reporter
+        run: npm install -g newman newman-reporter-html
 
       - name: Run Newman Collection with HTML report
         run: |
-          echo "Current directory: $(pwd)"
           mkdir -p $GITHUB_WORKSPACE/newman-report
           newman run $GITHUB_WORKSPACE/WorkingTestAPICollection.json \
             --reporters cli,html \
