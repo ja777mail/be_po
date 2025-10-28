@@ -1,4 +1,4 @@
-name: Run Postman Collection with Verified HTML Report
+name: Run Postman Collection with HTML Report
 
 on:
   push:
@@ -15,27 +15,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Run Newman Collection using anthonyvscode/newman-action
-      - name: Run Newman Collection (HTML report)
-        uses: anthonyvscode/newman-action@v1
+      # 2️⃣ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          collection: WorkingTestAPICollection.json
-          reporters: html
-          htmlReport: ./newman-report/report.html
+          node-version: "20"
 
-      # 3️⃣ Verify that the HTML report exists
-      - name: List files in newman-report
+      # 3️⃣ Install Newman + HTML reporter
+      - name: Install Newman and HTML reporter
+        run: npm install -g newman newman-reporter-html
+
+      # 4️⃣ Run Newman Collection with HTML report
+      - name: Run Newman Collection
         run: |
-          echo "Listing newman-report directory:"
-          ls -la ./newman-report
-          if [ ! -f ./newman-report/report.html ]; then
-            echo "ERROR: report.html not found!"
-            exit 1
-          fi
+          mkdir -p newman-report
+          newman run WorkingTestAPICollection.json \
+            --reporters cli,html \
+            --reporter-html-export newman-report/report.html
 
-      # 4️⃣ Upload HTML report as artifact
+      # 5️⃣ Verify that report exists
+      - name: List newman-report directory
+        run: ls -la newman-report
+
+      # 6️⃣ Upload HTML report as artifact
       - name: Upload Newman HTML report
         uses: actions/upload-artifact@v3
         with:
           name: newman-html-report
-          path: ./newman-report/report.html
+          path: newman-report/report.html
