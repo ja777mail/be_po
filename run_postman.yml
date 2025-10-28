@@ -11,32 +11,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Получаем код репозитория
+      # 1️⃣ Checkout
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Устанавливаем Node.js
+      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      # 3️⃣ Устанавливаем Newman и HTML репортёр локально
-      - name: Install Newman and HTML reporter
-        run: npm install newman newman-reporter-html --save-dev
+      # 3️⃣ Install dependencies
+      - name: Install npm dependencies
+        run: npm install
 
-      # 4️⃣ Запуск Newman с HTML отчетом
+      # 4️⃣ Run Newman via npm script
       - name: Run Newman Collection with HTML report
         run: |
-          mkdir -p newman-report
-          npx newman run WorkingTestAPICollection.json \
-            --reporters cli,html \
-            --reporter-html-export newman-report/report.html \
-            --disable-unicode
-          echo "Files in newman-report after Newman run:"
+          npm run run:newman
+          echo "Listing files in newman-report:"
           ls -la newman-report
 
-      # 5️⃣ Проверка, что HTML файл создан
+      # 5️⃣ Verify HTML report
       - name: Verify HTML report exists
         run: |
           if [ ! -f newman-report/report.html ]; then
@@ -45,7 +41,7 @@ jobs:
           else
             echo "✅ Newman HTML report exists."
 
-      # 6️⃣ Загружаем HTML отчет как артефакт
+      # 6️⃣ Upload HTML report as artifact
       - name: Upload Newman HTML report
         uses: actions/upload-artifact@v3
         with:
