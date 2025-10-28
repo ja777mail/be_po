@@ -1,0 +1,53 @@
+{
+	"info": {
+		"name": "Test API Collection",
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"description": "Коллекция из двух запросов к открытой тестовой API ReqRes.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET Users List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://reqres.in/api/users?page=2",
+					"protocol": "https",
+					"host": ["reqres", "in"],
+					"path": ["api", "users"],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Create User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Alisher\",\n    \"job\": \"QA Engineer\"\n}"
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users",
+					"protocol": "https",
+					"host": ["reqres", "in"],
+					"path": ["api", "users"]
+				}
+			},
+			"response": []
+		}
+	]
+}
