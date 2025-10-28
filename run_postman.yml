@@ -1,4 +1,4 @@
-name: Run Postman Collection (Mini)
+name: Run Postman Collection with HTML Report
 
 on:
   push:
@@ -11,34 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      # 2️⃣ Run Newman Collection using anthonyvscode/newman-action
+      - name: Run Newman Collection (HTML report)
+        uses: anthonyvscode/newman-action@v1
         with:
-          node-version: "20"
+          collection: WorkingTestAPICollection.json
+          reporters: html
+          htmlReport: newman-report.html
 
-      # 3️⃣ Install Newman + HTML reporter globally
-      - name: Install Newman and HTML reporter
-        run: |
-          npm install -g newman newman-reporter-html
-
-      # 4️⃣ Run Newman with HTML report
-      - name: Run Newman Collection
-        run: |
-          mkdir -p newman-report
-          newman run WorkingTestAPICollection.json \
-            --reporters cli,html \
-            --reporter-html-export newman-report/report.html
-          echo "Files in newman-report:"
-          ls -la newman-report
-
-      # 5️⃣ Upload HTML report as artifact
+      # 3️⃣ Upload HTML report as artifact
       - name: Upload Newman HTML report
         uses: actions/upload-artifact@v3
         with:
           name: newman-html-report
-          path: newman-report/report.html
+          path: newman-report.html
