@@ -18,25 +18,7 @@
 					"path": ["posts"]
 				}
 			},
-			"response": [],
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"pm.test(\"Response is an array\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(Array.isArray(jsonData)).to.be.true;",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			]
+			"response": []
 		},
 		{
 			"name": "POST Create Post",
@@ -59,25 +41,7 @@
 					"path": ["posts"]
 				}
 			},
-			"response": [],
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 201\", function () {",
-							"    pm.response.to.have.status(201);",
-							"});",
-							"",
-							"pm.test(\"Response contains post ID\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData).to.have.property(\"id\");",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			]
+			"response": []
 		}
 	]
 }
