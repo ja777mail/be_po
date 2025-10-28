@@ -1,16 +1,13 @@
 name: Run Newman Collection
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
   run-collection:
     runs-on: ubuntu-latest
-
     steps:
-      # 1️⃣ Клонируем репозиторий
+      # 1️⃣ Скачиваем репозиторий
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -20,29 +17,33 @@ jobs:
         with:
           node-version: 20
 
-      # 3️⃣ Устанавливаем Newman
-      - name: Install Newman
+      # 3️⃣ Устанавливаем Newman и HTML репортер
+      - name: Install Newman and HTML Reporter
         run: |
-          set -x
-          echo "📦 Installing Newman globally..."
-          npm install -g newman
-          npm list -g --depth=0
+          echo "📦 Installing Newman and HTML reporter..."
+          npm install -g newman@5 newman-reporter-html@5
 
-      # 4️⃣ Запуск Newman с подробным логом и HTML-отчётом
+      # 4️⃣ Создаем папку для отчета
+      - name: Prepare report folder
+        run: |
+          echo "📂 Creating report folder..."
+          mkdir -p newman-report
+
+      # 5️⃣ Запускаем коллекцию Newman с CLI и HTML отчетом
       - name: Run Newman Collection
         run: |
-          set -x
-          echo "📂 Creating report directory..."
-          mkdir -p newman-report
           echo "🏃 Running Newman collection..."
           newman run TestAPICollection.json \
             --reporters cli,html \
-            --reporter-html-export newman-report/report.html \
-            --verbose
-          echo "📋 Listing report files:"
+            --reporter-html-export newman-report/report.html
+
+      # 6️⃣ Проверяем, что отчет действительно создан
+      - name: Verify report
+        run: |
+          echo "📋 Checking report files..."
           ls -la newman-report
 
-      # 5️⃣ Загружаем HTML-отчёт как артефакт
+      # 7️⃣ Загружаем HTML-отчет как артефакт
       - name: Upload Newman HTML Report
         uses: actions/upload-artifact@v3
         with:
