@@ -11,37 +11,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Получаем код репозитория
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Устанавливаем Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      - name: Install Newman with HTML reporter
-        run: npm install -g newman newman-reporter-html
+      # 3️⃣ Устанавливаем Newman и HTML репортёр локально
+      - name: Install Newman and HTML reporter
+        run: npm install newman newman-reporter-html --save-dev
 
+      # 4️⃣ Запуск Newman с HTML отчетом
       - name: Run Newman Collection with HTML report
         run: |
-          mkdir -p $GITHUB_WORKSPACE/newman-report
-          newman run $GITHUB_WORKSPACE/WorkingTestAPICollection.json \
+          mkdir -p newman-report
+          npx newman run WorkingTestAPICollection.json \
             --reporters cli,html \
-            --reporter-html-export $GITHUB_WORKSPACE/newman-report/report.html \
+            --reporter-html-export newman-report/report.html \
             --disable-unicode
           echo "Files in newman-report after Newman run:"
-          ls -la $GITHUB_WORKSPACE/newman-report
+          ls -la newman-report
 
+      # 5️⃣ Проверка, что HTML файл создан
       - name: Verify HTML report exists
         run: |
-          if [ ! -f $GITHUB_WORKSPACE/newman-report/report.html ]; then
+          if [ ! -f newman-report/report.html ]; then
             echo "ERROR: Newman HTML report not found!"
             exit 1
           else
             echo "✅ Newman HTML report exists."
 
+      # 6️⃣ Загружаем HTML отчет как артефакт
       - name: Upload Newman HTML report
         uses: actions/upload-artifact@v3
         with:
           name: newman-html-report
-          path: $GITHUB_WORKSPACE/newman-report/report.html
+          path: newman-report/report.html
