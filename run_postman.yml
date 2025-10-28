@@ -1,4 +1,4 @@
-name: Run Postman Collection
+name: Run Postman Collection (Mini)
 
 on:
   push:
@@ -21,27 +21,22 @@ jobs:
         with:
           node-version: "20"
 
-      # 3️⃣ Install dependencies
-      - name: Install npm dependencies
-        run: npm install
-
-      # 4️⃣ Run Newman via npm script
-      - name: Run Newman Collection with HTML report
+      # 3️⃣ Install Newman + HTML reporter globally
+      - name: Install Newman and HTML reporter
         run: |
-          npm run run:newman
-          echo "Listing files in newman-report:"
+          npm install -g newman newman-reporter-html
+
+      # 4️⃣ Run Newman with HTML report
+      - name: Run Newman Collection
+        run: |
+          mkdir -p newman-report
+          newman run WorkingTestAPICollection.json \
+            --reporters cli,html \
+            --reporter-html-export newman-report/report.html
+          echo "Files in newman-report:"
           ls -la newman-report
 
-      # 5️⃣ Verify HTML report
-      - name: Verify HTML report exists
-        run: |
-          if [ ! -f newman-report/report.html ]; then
-            echo "ERROR: Newman HTML report not found!"
-            exit 1
-          else
-            echo "✅ Newman HTML report exists."
-
-      # 6️⃣ Upload HTML report as artifact
+      # 5️⃣ Upload HTML report as artifact
       - name: Upload Newman HTML report
         uses: actions/upload-artifact@v3
         with:
