@@ -1,4 +1,4 @@
-name: Run Postman Collection with HTML Report
+name: Run Postman Collection with Verified HTML Report
 
 on:
   push:
@@ -21,11 +21,21 @@ jobs:
         with:
           collection: WorkingTestAPICollection.json
           reporters: html
-          htmlReport: newman-report.html
+          htmlReport: ./newman-report/report.html
 
-      # 3️⃣ Upload HTML report as artifact
+      # 3️⃣ Verify that the HTML report exists
+      - name: List files in newman-report
+        run: |
+          echo "Listing newman-report directory:"
+          ls -la ./newman-report
+          if [ ! -f ./newman-report/report.html ]; then
+            echo "ERROR: report.html not found!"
+            exit 1
+          fi
+
+      # 4️⃣ Upload HTML report as artifact
       - name: Upload Newman HTML report
         uses: actions/upload-artifact@v3
         with:
           name: newman-html-report
-          path: newman-report.html
+          path: ./newman-report/report.html
