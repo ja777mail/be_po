@@ -1,26 +1,71 @@
 name: Run Postman Collection
 
 on:
+  workflow_dispatch: # ручной запуск
   push:
     branches:
       - main
-  workflow_dispatch: # позволяет запускать вручную
 
 jobs:
   run-collection:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      # 1. Клонируем репозиторий
+      - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2. Устанавливаем Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: 20
 
+      # 3. Устанавливаем Newman
       - name: Install Newman
         run: npm install -g newman
 
+      # 4. Создаём папку для отчётов
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      # 5. Запускаем коллекцию с CLI, JSON и HTML отчётами
       - name: Run Postman Collection
-        run: newman run TestAPICollection.json
+        run: |
+          echo "🚀 Running Postman collection..."
+          newman run TestAPICollection.json \
+            -r cli,json,html \
+            --reporter-json-export reports/newman-report.json \
+            --reporter-html-export reports/newman-report.html
+
+      # 6. Проверяем наличие отчётов
+      - name: Check report files
+        run: |
+          echo "📁 Contents of reports directory:"
+          ls -la reports
+          test -f reports/newman-report.json || (echo "❌ JSON report missing" && exit 1)
+          test -f reports/newman-report.html || (echo "❌ HTML report missing" && exit 1)
+
+      # 7. Извлекаем статистику из JSON-отчёта
+      - name: Extract test summary from JSON report
+        run: |
+          echo "📊 Newman test summary:"
+          passed=$(jq '.run.stats.assertions.total - .run.stats.assertions.failed' reports/newman-report.json)
+          failed=$(jq '.run.stats.assertions.failed' reports/newman-report.json)
+          total=$(jq '.run.stats.assertions.total' reports/newman-report.json)
+
+          echo "✅ Passed: $passed"
+          echo "❌ Failed: $failed"
+          echo "📋 Total:  $total"
+
+          if [ "$failed" -gt 0 ]; then
+            echo "❗ Some tests failed"
+            exit 1
+          fi
+
+      # 8. Загружаем отчёты как артефакт
+      - name: Upload Newman Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-reports
+          path: reports/
