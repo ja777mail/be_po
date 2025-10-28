@@ -25,10 +25,22 @@ jobs:
       - name: Run Postman Collection with HTML report
         run: |
           mkdir -p newman-report
+          echo "Running Newman collection..."
           newman run WorkingTestAPICollection.json \
             --reporters cli,html \
             --reporter-html-export newman-report/report.html \
             --disable-unicode
+          echo "Listing generated files:"
+          ls -la newman-report
+
+      - name: Verify HTML report exists
+        run: |
+          if [ ! -f newman-report/report.html ]; then
+            echo "ERROR: Newman HTML report not found!"
+            exit 1
+          else
+            echo "✅ Newman HTML report exists."
+          fi
 
       - name: Upload Newman HTML report
         uses: actions/upload-artifact@v3
