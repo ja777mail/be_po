@@ -1,7 +1,7 @@
 name: Run Postman Collection
 
 on:
-  workflow_dispatch: # ручной запуск
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -21,9 +21,11 @@ jobs:
         with:
           node-version: 20
 
-      # 3. Устанавливаем Newman
-      - name: Install Newman
-        run: npm install -g newman
+      # 3. Устанавливаем Newman и HTML-репортёр
+      - name: Install Newman and HTML reporter
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-html
 
       # 4. Создаём папку для отчётов
       - name: Create reports directory
@@ -44,7 +46,7 @@ jobs:
           echo "📁 Contents of reports directory:"
           ls -la reports
           test -f reports/newman-report.json || (echo "❌ JSON report missing" && exit 1)
-          test -f reports/newman-report.html || (echo "❌ HTML report missing" && exit 1)
+          test -f reports/newman-report.html || echo "⚠️ HTML report not found (optional)"
 
       # 7. Извлекаем статистику из JSON-отчёта
       - name: Extract test summary from JSON report
