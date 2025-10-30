@@ -2,7 +2,7 @@
 	"info": {
 		"name": "Working Test API Collection",
 		"_postman_id": "c1d2e3f4-5678-90ab-cdef-1234567890ab",
-		"description": "GET и POST запросы к JSONPlaceholder. Работает в Newman без авторизации.",
+		"description": "GET и POST запросы к JSONPlaceholder. Работает в Newman (без авторизации).",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
