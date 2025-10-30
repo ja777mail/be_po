@@ -54,4 +54,4 @@ Portfolio project demonstrating tester’s practical skills in:
 
 📌 **Проект создан в учебных и демонстрационных целях для портфолио.**
 
-## ⭐ QA Engineer Alisher
+## ⭐ QA Engineer: Alisher
