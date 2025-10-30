@@ -1,4 +1,4 @@
-name: Run Postman Collection
+name: Postman Collection 1
 
 on:
   workflow_dispatch:

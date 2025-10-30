@@ -2,7 +2,7 @@
 
 _(Postman + Newman + GitHub Actions)_
 
-[![Run Postman Collection](https://github.com/ja777mail/be_po/actions/workflows/run_postman.yml/badge.svg)](https://github.com/ja777mail/be_po/actions/workflows/run_postman.yml)
+[![Postman Collection](https://github.com/ja777mail/be_po/actions/workflows/ci_postman.yml/badge.svg)](https://github.com/ja777mail/be_po/actions/workflows/ci_postman.yml)
 
 ---
 
@@ -17,7 +17,7 @@ _(Postman + Newman + GitHub Actions)_
 
 📂 Репозиторий показывает реальные сценарии запуска тестов при каждом `push`.  
 🔗 **Результаты последних запусков:**  
-👉 [Run Postman Collection — GitHub Actions](https://github.com/ja777mail/be_po/actions/workflows/run_postman.yml)
+👉 [Postman Collection — GitHub Actions](https://github.com/ja777mail/be_po/actions/workflows/ci_postman.yml)
 
 ---
 
@@ -32,7 +32,7 @@ Portfolio project demonstrating tester’s practical skills in:
 
 📂 Repository runs real automated tests on every commit.  
 🔗 **Latest test results:**  
-👉 [Run Postman Collection — GitHub Actions](https://github.com/ja777mail/be_po/actions/workflows/run_postman.yml)
+👉 [Run Postman Collection — GitHub Actions](https://github.com/ja777mail/be_po/actions/workflows/ci_postman.yml)
 
 ---
 
