@@ -1,0 +1,28 @@
+
+# Игнорировать все файлы с расширением .log
+logs/
+*.log
+
+# Игнорировать Node
+node_modules/
+
+# Игнорировать файлы настроек IDE
+.vscode/
+
+# VS Code
+.vscode/
+.history/
+*.code-workspace
+
+# Env files
+.env
+.env.test
+.env.local
+
+# macOS system files
+.DS_Store
+
+# others
+keys.txt
+wdio.conf.00
+*copy.*
