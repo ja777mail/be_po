@@ -2,6 +2,8 @@
 
 _(Postman + Newman + GitHub Actions)_
 
+[![Run Postman Collection](https://github.com/ja777mail/be_po/actions/workflows/run_postman.yml/badge.svg)](https://github.com/ja777mail/be_po/actions/workflows/run_postman.yml)
+
 ---
 
 ## 🇷🇺 Описание
