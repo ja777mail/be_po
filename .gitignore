@@ -24,6 +24,5 @@ node_modules/
 
 # others
 keys.txt
-wdio.conf.00
 *copy.*
 report*

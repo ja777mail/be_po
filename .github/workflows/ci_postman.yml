@@ -1,4 +1,4 @@
-name: Postman Collection 1
+name: Postman Collection
 
 on:
   workflow_dispatch:
