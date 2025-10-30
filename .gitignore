@@ -26,3 +26,4 @@ node_modules/
 keys.txt
 wdio.conf.00
 *copy.*
+report*
