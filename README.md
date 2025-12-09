@@ -21,6 +21,12 @@ _(Postman + Newman + GitHub Actions)_
 
 ---
 
+## ✅ Quickstart
+npm install -g newman  
+newman run TestAPICollection.json  
+
+---
+
 ## 🇬🇧 Description
 
 Portfolio project demonstrating tester’s practical skills in:
